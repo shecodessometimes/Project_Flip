@@ -12,25 +12,46 @@
 using namespace std;
 
 /*
-* Initializes the code object.
-* n: integer n, representing the length of the new code object.
-* m: integer m, representing the range of the new code object.
+* Initializes the deck object, in 1-13 and suit order.
 */
-deck::deck(const int& n, const int& m)
+deck::deck()
 {
-    LENGTH = n;
-    RANGE = m;
-    CODE.resize(LENGTH);
-    COUNT = 0;
+    //linked list of a deck
+    for (int s = 4, s > 0, s++)
+    {
+        for (int n = 13, n > 0, n++)
+        {
+            new_card = new card(n, s);
+            //if first card
+            if (s = 4 && n = 13)
+            {
+                front = node<card>(new_card);
+            }
+            else
+            {
+                front = node<card>(new_card, front);
+            }
+        }
+    }
 }
 
 /*
-* Gets the value of length from a given code object.
-* No inputs.
+* Shuffle the deck represented by the deck object.
 */
-int code::getLength()
+void deck::shuffle()
 {
-    return LENGTH;
+    //shuffle deck
+}
+
+/*
+* Initializes the card object.
+* v: integer v, the numerical value of the card (1 is ace, 11 is jack, 12 is queen, 13 is king).
+* s: integer s, the suit of the card (0 = hearts, 1 = suits, etc.)
+*/
+card::card(int v, int s)
+{
+    value = v;
+    suit = s;
 }
 
 /*

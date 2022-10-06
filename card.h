@@ -8,8 +8,7 @@ private:
     int value;
     String suit;
 public:
-    deck();
-    void shuffle();
-    card drawTop();
+    card(int v, int s);
+    printCard();
 };
 #endif
