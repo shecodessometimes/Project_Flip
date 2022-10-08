@@ -6,9 +6,14 @@ class card
 {
 private:
     int value;
-    String suit;
+    std::string suit;
 public:
-    card(int v, int s);
-    printCard();
+    card(const std::string& s, const int& v);
+    void setValue(const int& v);
+    void setSuit(const std::string& s);
+    int getValue() const;
+    std::string getSuit() const;
+    friend std::ostream& operator << (std::ostream& ostr, const card& rhs);
 };
+
 #endif

@@ -8,10 +8,11 @@ class deck
 {
     private:
         //card linked list
-        node<card> front;
-
+        node<card> *front;
+        node<card> *back;
     public:
         deck();
+        void printDeck();
         void shuffle();
         card drawTop();
 };
