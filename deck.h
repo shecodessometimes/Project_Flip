@@ -12,9 +12,11 @@ private:
     node<card>* back;
 public:
     deck();
+    deck(node<card>* first_card);
     void printDeck();
     void shuffle();
-    card drawTop();
+    void insertCard(node<card>* new_card);
+    node<card>* drawTop();
     card getCardAtI(int i);
 };
 #endif

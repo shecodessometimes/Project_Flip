@@ -19,38 +19,47 @@ using namespace std;
 /*
 * Initializes the deck object, in 1-13 and suit order.
 */
-deck::deck()                                                    // Donish
+deck::deck()
 {
     //linked list of a deck
-    string suit_list[] = {"club", "diamond", "heart", "spade"};
+    string suit_list[] = { "club", "diamond", "heart", "spade" };
     for (int s = 0; s < 4; s++)
     {
         for (int n = 1; n < 14; n++)
         {
-            node<card> *newCard;
-            //if first card
+            node<card>* newCard;
+            //checks if first card
             if (s == 0 && n == 1)
             {
                 card new_card(suit_list[s], n);
-                newCard = new node<card> (new_card, NULL);
+                newCard = new node<card>(new_card, NULL);
                 front = newCard;
                 back = newCard;
             }
             else
             {
-                node<card> *curr;
+                node<card>* curr;
                 curr = front;
                 while (curr->next != NULL)
                 {
                     curr = curr->next;
                 }
                 card new_card(suit_list[s], n);
-                newCard = new node<card> (new_card, NULL);
+                newCard = new node<card>(new_card, NULL);
                 curr->next = newCard;
                 back = newCard;
             }
         }
     }
+}
+
+/*
+* Initializes the deck object with single card.
+*/
+deck::deck(node<card>* first_card)
+{
+    front = first_card;
+    back = first_card;
 }
 
 
@@ -59,17 +68,16 @@ deck::deck()                                                    // Donish
 */
 void deck::shuffle()
 {
-    node<card> *curr1;
-    node<card> *prev1;
-    node<card> *curr2;
-    node<card> *prev2;
+    node<card>* curr1;
+    node<card>* prev1;
+    node<card>* curr2;
+    node<card>* prev2;
     curr1 = front;
     for (int ind = 0; ind < 50; ind++)
     {
-        srand (time(NULL));
+        srand(time(NULL));
         int off = 51 - ind;
         int swap_ind = rand() % off + ind;
-        //cout << "Swap Index: " << swap_ind << endl;
         if (ind != swap_ind)
         {
             if (ind != 0)
@@ -79,11 +87,6 @@ void deck::shuffle()
                 curr2 = curr1;
                 card temp3 = prev1->nodeValue;
                 card temp4 = curr1->nodeValue;
-                /*
-                cout << "Previous Baseline: " << temp3.getSuit() << "," << temp3.getValue() << endl;
-                cout << "Current Baseline: " << temp4.getSuit() << "," << temp4.getValue() << endl;
-                cout << "Now: " << ind << ",Then: " << swap_ind << endl;
-                */
             }
             else
             {
@@ -97,13 +100,9 @@ void deck::shuffle()
                     curr2 = curr2->next;
                     card temp3 = prev2->nodeValue;
                     card temp4 = curr2->nodeValue;
-                    /*
-                    cout << "Previous: " << temp3.getSuit() << "," << temp3.getValue() << endl;
-                    cout << "Current: " << temp4.getSuit() << "," << temp4.getValue() << endl;
-                    */
                 }
 
-                node<card> *temp;
+                node<card>* temp;
                 if (ind == 0)
                 {
                     front = curr2;
@@ -112,8 +111,6 @@ void deck::shuffle()
                     curr1->next = curr2->next;
                     curr2->next = temp;
                     curr1 = curr2;
-                    //cout << "==========================\n";
-                    //this->printDeck();
                 }
                 else
                 {
@@ -123,24 +120,55 @@ void deck::shuffle()
                     curr1->next = curr2->next;
                     curr2->next = temp;
                     curr1 = curr2;
-                    //this->printDeck();
-                    //cout << "==========================\n";
                 }
-            }          
+            }
         }
     }
 }
 
 void deck::printDeck()
 {
-    node<card> *curr;
+    node<card>* curr;
     curr = front;
     while (curr != NULL)
     {
         cout << curr->nodeValue << endl;
         curr = curr->next;
     }
-    
+
+}
+
+card deck::getCardAtI(int i)
+{
+    node<card>* current_card;
+    current_card = front;
+    for (int n = 0; n < i; n++)
+    {
+        current_card = current_card->next;
+    }
+    return current_card->nodeValue;
+}
+
+node<card>* deck::drawTop()
+{
+    //get top card
+    node<card>* top_card;
+    top_card = front;
+
+    //reassign next card as top
+    front = top_card->next;
+    top_card->next = NULL;
+
+    //return top_card
+    return top_card;
+}
+
+void deck::insertCard(node<card>* new_card)
+{
+
+    //reassign the new card as top
+    new_card->next = front;
+    front = new_card;
 }
 
 //=============================================================================
@@ -163,9 +191,33 @@ card::card(const string& s, const int& v)                       // Done
 * ostr: the ostream to print to.
 * rhs: the response to print out.
 */
-ostream& operator << (ostream& ostr, const card& rhs)           // Doneish
+ostream& operator << (ostream& ostr, const card& rhs)
 {
-    ostr << rhs.getValue() << ", " << rhs.getSuit();
+    //card is ace
+    if (rhs.getValue() == 1)
+    {
+        ostr << "Ace";
+    }
+    //card is 2 - 10
+    else if (rhs.getValue() < 11)
+    {
+        ostr << rhs.getValue();
+    }
+    //card is jack
+    else if (rhs.getValue() == 11)
+    {
+        ostr << "Jack";
+    }
+    else if (rhs.getValue() == 12)
+    {
+        ostr << "Queen";
+    }
+    else
+    {
+        ostr << "King";
+    }
+    char first_char = toupper(rhs.getSuit()[0]);
+    ostr << " of " << first_char << rhs.getSuit().substr(1) << "s.";
     return ostr;
 }
 
@@ -173,7 +225,7 @@ ostream& operator << (ostream& ostr, const card& rhs)           // Doneish
 void card::setValue(const int& v)                               // Doneish
 {
     bool valid = false;
-    while(!valid)
+    while (!valid)
     {
         if (v > 0 && v < 13)
         {
@@ -197,8 +249,8 @@ int card::getValue() const                                           // Doneish
 void card::setSuit(const string& s)                             // Doneish
 {
     bool valid = false;
-    cout <<"\nPlease enter a suit (lowercase):";
-    while(!valid)
+    cout << "\nPlease enter a suit (lowercase):";
+    while (!valid)
     {
         valid = true;
         if (s == "club" || s == "diamond" || s == "heart" || s == "spade")
@@ -223,138 +275,73 @@ string card::getSuit() const
 // 
 //=============================================================================
 
-/*
-* Gets the code stored in a given code object.
-* No inputs.
-*/
-/*
-std::vector<int> code::getCode()
+int main()
 {
-    return CODE;
-}
-*/
-/*
-* Initializes the random code to guess.
-* No inputs.
-*/
-/*
-void code::initializeCode()
-{
-    for (int i = 0; i < LENGTH; i++)
-    {
-        CODE[i] = rand() % RANGE;
-    }
-}
-*/
-/*
-* Sets a specific digit in the code.
-* digit: new integer value of the digit.
-* index: integer index of the digit to change.
-*/
-/*
-void code::setCodeDigit(int digit, int index)
-{
-    CODE[index] = digit;
-}
+    //print the welcome message
+    cout << "==================================================================\n";
+    cout << "Welcome to Card Flip!\n";
+    cout << "You will draw from one of 24 cards from a shuffled deck.\n";
+    cout << "If you draw an ace, you get 10 points.\n";
+    cout << "If you draw a king, queen, or jack you get 5 points.\n";
+    cout << "If you draw an 8, 9, or 10, you get 0 points.\n";
+    cout << "If you draw a 7, you lose half your points.\n";
+    cout << "If you draw a 2, 3, 4, 5, or 6, you lose all your points.\n";
+    cout << "Additionally, if you draw a heart you gain a point!\n";
+    cout << "You can end the game any time. Good luck!\n";
+    cout << "==================================================================\n";
 
-{
-    int numIncorrect = 0;
-    int count = LENGTH;
-    vector<int> temp = CODE;
-    for (int i = 0; i < count; i++)
+    //initialize the deck, shuffle, then draw.
+    deck gameDeck;
+    for (int i = 0; i < 3; i++)
     {
-        if (guess.CODE[i] == temp[i]) {
-            guess.CODE.erase(guess.CODE.begin() + i);
-            temp.erase(temp.begin() + i);
-            i--;
-            count--;
-        }
+        gameDeck.shuffle();
     }
-    for (int i = 0; i < count; i++)
+
+    //initialize the smaller deck of 25 cards by drawing the top card of the deck.
+    node<card>* top_card = gameDeck.drawTop();
+    deck top25(top_card);
+
+    //only 24 more cards, because the first was already drawn.
+    for (int i = 0; i < 24; i++)
     {
-        for (int j = 0; j < count; j++)
+        node<card>* next_card = gameDeck.drawTop();
+        top25.insertCard(next_card);
+    }
+
+    //print the deck with the top 25 cards
+    top25.printDeck();
+
+    //initialize the keep_playing character
+    char keep_playing = 'y';
+
+    //keep drawing a card until the user wants to stop.
+    while (keep_playing == 'y')
+    {
+        //ask for index of a card
+        cout << "What card would you like to draw? ";
+        int card_index = 0;
+        cin >> card_index;
+        cout << "You chose " << top25.getCardAtI(card_index) << " ";
+
+        //*************************************************************************!
+        //calculate points for the drawn card and store it
+        //*************************************************************************!
+
+        //initialize the user_input character
+        char user_input = 'a';
+
+        //ask if user wants to keep playing
+        while (1 == 1)
         {
-            if (guess.CODE[i] == temp[j])
+            cout << "Would you like to draw another card (y) or quit (n)? ";
+            cin >> user_input;
+            if (user_input == 'y' | user_input == 'n')
             {
-                temp[j] = RANGE + 2;
-                numIncorrect++;
                 break;
             }
         }
-    }
-    return numIncorrect;
-}
-*/
-/*
-* Prints the stored code.
-* No inputs.
-*/
-/*
-void code::print()
-{
-    for (int i = 0; i < LENGTH; i++)
-    {
-        cout << CODE[i];
-    }
-}
-*/
-/*
-* Overrides the == function for comparing two responses.
-* lhs: the response on the left hand side of the == operator, the first response to compare.
-* rhs: the response on the right hand side of the == operator, the second response to compare.
-*/
-/*
-bool operator == (const response& lhs, const response& rhs)
-{
-    return ((lhs.getCorrect() == rhs.getCorrect()) && (lhs.getIncorrect() == rhs.getIncorrect()));
-}
-*/
-/*
-* Intialize mastermind object with a secret code of length 5 and range 10.
-* No inputs.
-*/
-/*
-mastermind::mastermind() : secretCode(5, 10)
-{
-    secretCode.initializeCode();
-    n = 5;
-    m = 10;
-}
-*/
-/*
-* Intialize mastermind object with a secret code of length nGiven and range mGiven.
-* nGiven: integer length of the initialized secret code.
-* nGiven: integer range of the initialized secret code.
-*/
-/*
-mastermind::mastermind(const int& nGiven, const int& mGiven) : secretCode(nGiven, mGiven)
-{
-    secretCode.initializeCode();
-    n = nGiven;
-    m = mGiven;
-}
-*/
-/*
-* Print the secret code from the mastermind object.
-* No inputs.
-*/
-/*
-void mastermind::printSecretCode()
-{
-    secretCode.print();
-}
-*/
 
-/*
-* The main function, runs the whole code.
-* No inputs.
-*/
-
-int main()
-{
-    deck testDeck;
-    testDeck.printDeck();
-    testDeck.shuffle();
-    cout << "==========================\n";
-    testDeck.printDeck();
+        //assign the user_input character to the keep_playing character
+        keep_playing = user_input;
+    }
 }
