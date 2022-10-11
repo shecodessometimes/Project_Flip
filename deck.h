@@ -25,6 +25,7 @@ public:
     card getCardAtI(const int& i) const;
     void printDeck();
     void shuffle();
-    
+    friend std::ostream& operator << (std::ostream& ostr, const deck& rhs);
+
 }; // end of deck class
 #endif // End of header file.

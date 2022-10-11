@@ -153,18 +153,17 @@ void deck::shuffle()
     }
 } // End of shuffle
 
-void deck::printDeck()
+ostream& operator << (ostream& ostr, const deck& rhs)
 /*
-* Prints the deck objet into the command line.
+* overloads the << operator for the deck class
 * Iterates through each node in the linked list
 * and utilizes the overloaded << operator for 
 * the card object in the current node's nodeValue.
 * Finishes after printing the last node
 */
 {
-    // set current node
     node<card> *curr;
-    curr = front;
+    curr = rhs.front;
     cout << "\n====================\n";
     while (curr != NULL)
     // loop until end of list
@@ -173,7 +172,9 @@ void deck::printDeck()
         cout << curr->nodeValue << endl;
         curr = curr->next;
     }
-    cout << "\n====================\n";
+    cout << "====================\n";
+
+    return ostr;
 }
 
 //=============================================================================
@@ -312,9 +313,8 @@ int main()
 {
     //initialize the deck, shuffle, then draw.
     deck gameDeck;
-    cout << "Unshuffled Deck: " << endl;
-    gameDeck.printDeck();
+    cout << "Unshuffled Deck: ";
+    cout << gameDeck;
     gameDeck.shuffle();
-    cout << endl << "Shuffled Deck: " << endl;
-    gameDeck.printDeck();
+    cout << endl << "Shuffled Deck: " << endl << gameDeck;
 }
