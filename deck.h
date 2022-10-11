@@ -1,3 +1,7 @@
+// Header file deck.h for the Deck object.
+// Deck object implementation
+// Assumption: a deck contains 52 cards after construction
+
 #pragma once
 #ifndef DECK_H
 #define DECK_H
@@ -7,17 +11,20 @@
 class deck
 {
 private:
-    //card linked list
-    node<card>* front;
-    node<card>* back;
+    // card linked list front and back
+
+    node<card>* front;  // front card
+    node<card>* back;   // back card
+
 public:
+    // constructor
+
     deck();
-    deck(node<card>* first_card);
+
+    // deck operations
+    card getCardAtI(const int& i) const;
     void printDeck();
     void shuffle();
-    void insertCard(node<card>* new_card);
-    node<card>* drawTop();
-    card getCardAtI(int i) const;
-    friend std::ostream& operator << (std::ostream& ostr, const deck& rhs);
-};
-#endif
+    
+}; // end of deck class
+#endif // End of header file.
