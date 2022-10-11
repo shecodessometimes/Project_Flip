@@ -76,7 +76,7 @@ void deck::shuffle()
     for (int ind = 0; ind < 50; ind++)
     {
         srand(time(NULL));
-        int off = 51 - ind;
+        int off = 52 - ind;
         int swap_ind = rand() % off + ind;
         if (ind != swap_ind)
         {
@@ -138,7 +138,7 @@ void deck::printDeck()
 
 }
 
-card deck::getCardAtI(int i)
+card deck::getCardAtI(int i) const
 {
     node<card>* current_card;
     current_card = front;
@@ -169,6 +169,18 @@ void deck::insertCard(node<card>* new_card)
     //reassign the new card as top
     new_card->next = front;
     front = new_card;
+}
+
+/*
+ * Overloaded << operator to print out a deck object
+ */
+ostream& operator << (ostream& ostr, const deck& rhs)
+{
+    for(int i = 0; i < 52; i++)
+    {
+        cout << rhs.getCardAtI(i) << endl;
+    }
+    return ostr;
 }
 
 //=============================================================================
@@ -229,7 +241,7 @@ void card::setValue(const int& v)                               // Doneish
     {
         if (v > 0 && v < 13)
         {
-            valid == true;
+            valid = true;
         }
         else
         {
@@ -277,71 +289,13 @@ string card::getSuit() const
 
 int main()
 {
-    //print the welcome message
-    cout << "==================================================================\n";
-    cout << "Welcome to Card Flip!\n";
-    cout << "You will draw from one of 24 cards from a shuffled deck.\n";
-    cout << "If you draw an ace, you get 10 points.\n";
-    cout << "If you draw a king, queen, or jack you get 5 points.\n";
-    cout << "If you draw an 8, 9, or 10, you get 0 points.\n";
-    cout << "If you draw a 7, you lose half your points.\n";
-    cout << "If you draw a 2, 3, 4, 5, or 6, you lose all your points.\n";
-    cout << "Additionally, if you draw a heart you gain a point!\n";
-    cout << "You can end the game any time. Good luck!\n";
-    cout << "==================================================================\n";
-
     //initialize the deck, shuffle, then draw.
     deck gameDeck;
+    cout << "Unshuffled Deck: " << endl;
+    cout << gameDeck;
     for (int i = 0; i < 3; i++)
     {
         gameDeck.shuffle();
     }
-
-    //initialize the smaller deck of 25 cards by drawing the top card of the deck.
-    node<card>* top_card = gameDeck.drawTop();
-    deck top25(top_card);
-
-    //only 24 more cards, because the first was already drawn.
-    for (int i = 0; i < 24; i++)
-    {
-        node<card>* next_card = gameDeck.drawTop();
-        top25.insertCard(next_card);
-    }
-
-    //print the deck with the top 25 cards
-    top25.printDeck();
-
-    //initialize the keep_playing character
-    char keep_playing = 'y';
-
-    //keep drawing a card until the user wants to stop.
-    while (keep_playing == 'y')
-    {
-        //ask for index of a card
-        cout << "What card would you like to draw? ";
-        int card_index = 0;
-        cin >> card_index;
-        cout << "You chose " << top25.getCardAtI(card_index) << " ";
-
-        //*************************************************************************!
-        //calculate points for the drawn card and store it
-        //*************************************************************************!
-
-        //initialize the user_input character
-        char user_input = 'a';
-
-        //ask if user wants to keep playing
-        while (1 == 1)
-        {
-            cout << "Would you like to draw another card (y) or quit (n)? ";
-            cin >> user_input;
-            if (user_input == 'y' | user_input == 'n')
-            {
-                break;
-            }
-        }
-
-        //assign the user_input character to the keep_playing character
-        keep_playing = user_input;
-    }
+    cout << endl << "Shuffled Deck: " << endl << gameDeck;
 }

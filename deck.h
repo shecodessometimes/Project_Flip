@@ -17,6 +17,7 @@ public:
     void shuffle();
     void insertCard(node<card>* new_card);
     node<card>* drawTop();
-    card getCardAtI(int i);
+    card getCardAtI(int i) const;
+    friend std::ostream& operator << (std::ostream& ostr, const deck& rhs);
 };
 #endif
