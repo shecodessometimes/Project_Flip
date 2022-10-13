@@ -18,7 +18,9 @@ public:
     card(const std::string& s, const int& v);
 
     // copy constructor
-    card(const card& obj);
+    card(const card& obj) : 
+        value(obj.value), suit(obj.suit)
+        {};
 
     // card operations
 
@@ -27,7 +29,7 @@ public:
     int getValue() const;
     std::string getSuit() const;
     friend std::ostream& operator << (std::ostream& ostr, const card& rhs);
-    card& card::operator = (const card& rhs);     // is this right??
+    card& operator = (const card& rhs);     // is this right??
 };
 
 #endif

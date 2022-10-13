@@ -69,6 +69,20 @@ deck::deck()
     }
 } // end of deck constructor
 
+deck::~deck()
+{
+    node<card> *current;
+    node<card> *next;
+    current = front;
+    while (current != NULL)
+    {
+        next = current->next;
+        delete current;
+        current = next;
+    }
+    front = NULL;
+}
+
 void deck::shuffle()
 /*
 * Shuffle the deck represented by the deck
@@ -142,6 +156,15 @@ void deck::shuffle()
                     // reset 1st card pointer to the 2nd card
                     // (fixes 1st card current pointer back for future)
                     curr1 = curr2;
+                    if (ind == 49)
+                    {
+                        temp = curr1;
+                        while(temp->next != NULL)
+                        {
+                            temp = temp->next;
+                        }
+                        back = temp;
+                    }
                 }
             }
         }
@@ -149,6 +172,14 @@ void deck::shuffle()
         // card is randomly chosen to stay in it's original position
         {
             curr1 = curr1->next;
+            if (ind == 49)
+            {
+                while(curr1->next != NULL)
+                {
+                    curr1 = curr1->next;
+                }
+                back = curr1;
+            }
         }
     }
 } // End of shuffle
@@ -191,15 +222,6 @@ card::card(const string& s, const int& v)
 {
     value = v;
     suit = s;
-}
-
-card::card(const card& obj)
-/*
-* Copy Constructor
-*/
-{
-    value = obj.value;
-    suit = obj.suit;
 }
 
 card& card::operator=(const card& obj)
@@ -336,4 +358,5 @@ int main()
     cout << gameDeck;
     gameDeck.shuffle();
     cout << endl << "Shuffled Deck: " << endl << gameDeck;
+    cout << "This is for debugging";
 }

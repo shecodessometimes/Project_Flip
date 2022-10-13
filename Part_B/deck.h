@@ -18,14 +18,18 @@ private:
 
 public:
     // constructor
-
     deck();
 
+    // destructor
+    ~deck();
+
     // deck operations
-    card getCardAtI(const int& i) const;
+    card deal();
+    void replace(const card& obj);
     void printDeck();
     void shuffle();
     friend std::ostream& operator << (std::ostream& ostr, const deck& rhs);
+
 
 }; // end of deck class
 #endif // End of header file.
