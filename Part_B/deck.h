@@ -13,8 +13,8 @@ class deck
 private:
     // card linked list front and back
 
-    node<card>* front;  // front card
-    node<card>* back;   // back card
+    node<card> *front;  // front card
+    node<card> *back;   // back card
 
 public:
     // constructor

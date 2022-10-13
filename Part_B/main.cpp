@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Project#2
-// Flip-Card: Part A
+// Flip-Card: Part B
 // Written by:
 // James Napier:                                      napier.j@northeastern.edu
 // Julia Rasmussen:                                rasmussen.j@northeastern.edu
 // Samuel Sheehan:                                   sheehan.s@northeastern.edu
 //
-// Main program file for homework 2a. Contains declarations for 
+// Main program file for homework 2b. Contains declarations for 
 // deck, shuffle, printDeck, << operator overload for the card object, setValue,
 // getValue, setSuit and getSuit
 //
@@ -191,6 +191,25 @@ card::card(const string& s, const int& v)
 {
     value = v;
     suit = s;
+}
+
+card::card(const card& obj)
+/*
+* Copy Constructor
+*/
+{
+    value = obj.value;
+    suit = obj.suit;
+}
+
+card& card::operator=(const card& obj)
+/*
+* Overloaded = operator
+*/
+{
+    value = obj.value;
+    suit = obj.suit;
+    return *this;
 }
 
 ostream& operator << (ostream& ostr, const card& rhs)

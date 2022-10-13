@@ -17,6 +17,9 @@ public:
     // constructor
     card(const std::string& s, const int& v);
 
+    // copy constructor
+    card(const card& obj);
+
     // card operations
 
     void setValue(const int& v);
@@ -24,7 +27,7 @@ public:
     int getValue() const;
     std::string getSuit() const;
     friend std::ostream& operator << (std::ostream& ostr, const card& rhs);
-
+    card& card::operator = (const card& rhs);     // is this right??
 };
 
 #endif
