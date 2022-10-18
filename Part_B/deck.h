@@ -30,6 +30,5 @@ public:
     void shuffle();
     friend std::ostream& operator << (std::ostream& ostr, const deck& rhs);
 
-
 }; // end of deck class
 #endif // End of header file.

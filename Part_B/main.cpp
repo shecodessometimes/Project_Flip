@@ -24,7 +24,7 @@ using namespace std;
 //=============================================================================
 // Deck Methods
 //=============================================================================
-
+#pragma region Deck
 deck::deck()
 /*
 * Initializes the deck object, in 1-13 and suit order.
@@ -81,6 +81,7 @@ deck::~deck()
         current = next;
     }
     front = NULL;
+    back = NULL;
 }
 
 void deck::shuffle()
@@ -208,10 +209,36 @@ ostream& operator << (ostream& ostr, const deck& rhs)
     return ostr;
 }
 
+card deck::deal()                                       // Tested
+{
+    card newCard(front->nodeValue);
+    node<card> *temp;
+    temp = front->next;
+    delete front;
+    front = temp;
+    return newCard;
+}
+
+void deck::replace(const card& obj)                     // Tested
+{  
+    node<card> *newCard;
+    newCard = new node<card>(obj, NULL);
+    if (front == NULL)
+    {
+        front = newCard;
+        back = newCard;
+    }
+    else
+    {
+        back->next = newCard;
+        back = newCard;
+    }
+}
+#pragma endregion Deck
 //=============================================================================
 // Card Methods
 //=============================================================================
-
+#pragma region Card
 card::card(const string& s, const int& v)
 /*
 * Initializes the card object.
@@ -271,7 +298,6 @@ ostream& operator << (ostream& ostr, const card& rhs)
     return ostr;
 } // end of << overload
 
-
 void card::setValue(const int& v)
 /*
 * Sets the value of the card to v
@@ -300,7 +326,6 @@ void card::setValue(const int& v)
     }
 } // end of setValue
 
-
 int card::getValue() const
 /*
 * returns int value from card
@@ -308,7 +333,6 @@ int card::getValue() const
 {
     return value;
 }
-
 
 void card::setSuit(const string& s)
 /*
@@ -337,7 +361,6 @@ void card::setSuit(const string& s)
     }
 } // End of setSuit
 
-
 string card::getSuit() const
 /*
 * returns string suit from card
@@ -345,18 +368,44 @@ string card::getSuit() const
 {
     return suit;
 }
-
+#pragma endregion Card
 //=============================================================================
-// 
+void playFlip()
+{
+    // make gameDeck
+    deck gameDeck;
+    // empty deck for play prep     STILL NOT SURE IF THE DESTRUCTOR IS FORMATTED CORRECTLY
+    gameDeck.~deck();
+    // make drawDeck and play prep
+    deck drawDeck;
+    drawDeck.shuffle();
+
+    // loop to draw 24 cards into gameDeck
+    for (int i = 0; i < 24; i++)
+    {
+        gameDeck.replace(drawDeck.deal());
+    }
+    
+    // debug printing for grading
+    cout << endl << "Game Deck: " << endl << gameDeck;
+    cout << endl << "Remaining Cards: " << endl << drawDeck;
+}
 //=============================================================================
 
 int main()
 {
     //initialize the deck, shuffle, then draw.
+    playFlip();
+    /*
+    deck drawDeck;
     deck gameDeck;
+    gameDeck.~deck();
     cout << "Unshuffled Deck: ";
     cout << gameDeck;
-    gameDeck.shuffle();
-    cout << endl << "Shuffled Deck: " << endl << gameDeck;
+    drawDeck.shuffle();
+    cout << endl << "Shuffled Deck: " << endl << drawDeck;
     cout << "This is for debugging";
+    gameDeck.replace(drawDeck.deal());
+    cout << "This is for debugging" << endl << gameDeck;
+    */
 }
