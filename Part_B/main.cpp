@@ -375,7 +375,7 @@ void playFlip()
     // make gameDeck
     deck gameDeck;
     // empty deck for play prep     STILL NOT SURE IF THE DESTRUCTOR IS FORMATTED CORRECTLY
-    gameDeck.~deck();
+    // gameDeck.~deck();                WE NEED AN OVERLOADED CONSTRUCTOR with a bool indicating whether it is empty
     // make drawDeck and play prep
     deck drawDeck;
     drawDeck.shuffle();
