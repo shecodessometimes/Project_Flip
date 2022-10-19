@@ -378,7 +378,12 @@ void playFlip()
     // gameDeck.~deck();                WE NEED AN OVERLOADED CONSTRUCTOR with a bool indicating whether it is empty
     // make drawDeck and play prep
     deck drawDeck;
-    drawDeck.shuffle();
+    for (int i = 0; i < 3; i++)
+    {
+        drawDeck.shuffle();
+    }
+    
+        drawDeck.shuffle();
 
     // loop to draw 24 cards into gameDeck
     for (int i = 0; i < 24; i++)
