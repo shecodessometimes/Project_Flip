@@ -20,6 +20,9 @@ public:
     // constructor
     deck();
 
+    // overloaded constructor for empty deck
+    deck(bool a);
+
     // destructor
     ~deck();
 

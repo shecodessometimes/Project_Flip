@@ -69,6 +69,13 @@ deck::deck()
     }
 } // end of deck constructor
 
+deck::deck(bool a)
+{
+    front = NULL;
+    back = NULL;
+}
+
+// deck destructor
 deck::~deck()
 {
     node<card>* current;
@@ -420,10 +427,8 @@ void playFlip()
     cout << "You can end the game any time. Good luck!\n";
     cout << "==================================================================\n";
 
-    // make gameDeck
-    deck gameDeck;
-    // empty deck for play prep  
-    gameDeck.~deck();
+    // make empty gameDeck
+    deck gameDeck(true);
     // make drawDeck and play prep
     deck drawDeck;
     //shuffle the initial deck three times
@@ -445,21 +450,46 @@ void playFlip()
     //initialize the keep_playing character
     char keep_playing = 'y';
 
+    //initialize empty deck to represent hand
+    deck handDeck(true);
+
+    int points = 0;
+    int gameDeckLen = 24;
+
     //keep drawing a card until the user wants to stop.
     while (keep_playing == 'y')
     {
         //ask for index of a card
-        cout << "What card would you like to draw? ";
+        cout << "What card would you like to draw? From 0 - " << gameDeckLen - 1 << endl;
         int card_index = 0;
         cin >> card_index;
-        cout << "You chose " << gameDeck.getCardAtI(card_index) << " ";
+        card chosen = gameDeck.getCardAtI(card_index);
+        gameDeckLen -= 1;
+        cout << "You chose " << chosen << endl;
 
-        //*************************************************************************!
-        //calculate points for the drawn card and store it
-        //*************************************************************************!
+        //move flipped card into hand deck
+        handDeck.replace(chosen);
+
+        //add points
+        int val = chosen.getValue();
+        string suit = chosen.getSuit();
+        if (val == 1)
+            points += 10;
+        else if (10 < val && val < 14)
+            points += 5;
+        else if (val == 7)
+            points = 0;
+        else if(1 < val && val < 7)
+            points /= 2;
+        if (suit.compare("heart") == 0)
+            points += 1;
+
+        cout << "You have " << points << " points." << endl;
 
         cout << "\n==================================================================\n";
-        cout << endl << "Remaining Cards for Game: " << endl << gameDeck;
+        cout << endl << "Cards flipped: " << endl << handDeck;
+        cout << "\n==================================================================\n";
+        cout << endl << "Cards remaining in hand: " << endl << gameDeck;
 
         //initialize the user_input character
         char user_input = 'a';
@@ -471,6 +501,9 @@ void playFlip()
             cin >> user_input;
             if (user_input == 'y' | user_input == 'n')
             {
+                if(user_input == 'n')
+                    cout << endl << "Thanks for playing, you scored " << points
+                    << " points!!!" << endl;
                 break;
             }
         }
