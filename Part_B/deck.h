@@ -13,8 +13,8 @@ class deck
 private:
     // card linked list front and back
 
-    node<card> *front;  // front card
-    node<card> *back;   // back card
+    node<card>* front;  // front card
+    node<card>* back;   // back card
 
 public:
     // constructor
@@ -28,6 +28,7 @@ public:
     void replace(const card& obj);
     void printDeck();
     void shuffle();
+    card getCardAtI(int i);
     friend std::ostream& operator << (std::ostream& ostr, const deck& rhs);
 
 }; // end of deck class

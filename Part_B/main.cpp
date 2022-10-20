@@ -32,15 +32,15 @@ deck::deck()
 {
     string suit_list[] = { "club", "diamond", "heart", "spade" };
     for (int s = 0; s < 4; s++)
-    // loop for each suit
+        // loop for each suit
     {
         for (int n = 1; n < 14; n++)
-        // loop for each card in suit
+            // loop for each card in suit
         {
             // create new card pointer
-            node<card> *newCard;
+            node<card>* newCard;
             if (s == 0 && n == 1)
-            // checks if first card
+                // checks if first card
             {
                 // create new card, set to front
                 card new_card(suit_list[s], n);
@@ -49,13 +49,13 @@ deck::deck()
                 back = newCard;
             }
             else
-            // if not first card
+                // if not first card
             {
                 // set front
                 node<card>* curr;
                 curr = front;
                 while (curr->next != NULL)
-                // nagivate to end of current deck
+                    // nagivate to end of current deck
                 {
                     curr = curr->next;
                 }
@@ -71,8 +71,8 @@ deck::deck()
 
 deck::~deck()
 {
-    node<card> *current;
-    node<card> *next;
+    node<card>* current;
+    node<card>* next;
     current = front;
     while (current != NULL)
     {
@@ -93,14 +93,14 @@ void deck::shuffle()
 */
 {
     // create tracking pointers for swapped cards (1st and 2nd)
-    node<card> *curr1;
-    node<card> *prev1;
-    node<card> *curr2;
-    node<card> *prev2;
+    node<card>* curr1;
+    node<card>* prev1;
+    node<card>* curr2;
+    node<card>* prev2;
     // Set curr1 to first card
     curr1 = front;
     for (int ind = 0; ind < 50; ind++)
-    // completes operation for each card except the last
+        // completes operation for each card except the last
     {
         // seed psuedo-random number generator
         srand(time(NULL));
@@ -117,8 +117,8 @@ void deck::shuffle()
                 curr2 = curr1;
             }
             else
-            // base case: set 2nd card's current value to front card
-            // 1st card's previous value is unneeded because it is the front
+                // base case: set 2nd card's current value to front card
+                // 1st card's previous value is unneeded because it is the front
             {
                 curr2 = curr1;
             }
@@ -126,7 +126,7 @@ void deck::shuffle()
             if (swap_ind != ind)
             {
                 for (int ind2 = ind; ind2 < swap_ind; ind2++)
-                // navigate to 2nd card to be swapped
+                    // navigate to 2nd card to be swapped
                 {
                     prev2 = curr2;
                     curr2 = curr2->next;
@@ -134,7 +134,7 @@ void deck::shuffle()
                 // instantiate temporary card pointer to store swapped card
                 node<card>* temp;
                 if (ind == 0)
-                // base case: 1st card is the front card
+                    // base case: 1st card is the front card
                 {
                     front = curr2;
                     prev2->next = curr1;
@@ -160,7 +160,7 @@ void deck::shuffle()
                     if (ind == 49)
                     {
                         temp = curr1;
-                        while(temp->next != NULL)
+                        while (temp->next != NULL)
                         {
                             temp = temp->next;
                         }
@@ -170,12 +170,12 @@ void deck::shuffle()
             }
         }
         else
-        // card is randomly chosen to stay in it's original position
+            // card is randomly chosen to stay in it's original position
         {
             curr1 = curr1->next;
             if (ind == 49)
             {
-                while(curr1->next != NULL)
+                while (curr1->next != NULL)
                 {
                     curr1 = curr1->next;
                 }
@@ -185,26 +185,61 @@ void deck::shuffle()
     }
 } // End of shuffle
 
+card deck::getCardAtI(int i)
+{
+    node<card>* current_card;
+    node<card>* prev_card;
+    current_card = front;
+    prev_card = front;
+
+    if (i == 0)
+    {
+        card drawnCard = front->nodeValue;
+        node<card>* front_del = front;
+        front = front->next;
+        delete front_del;
+        return drawnCard;
+    }
+
+    for (int n = 0; n < i; n++)
+    {
+        //only moves pointer for current_card forward if on the first iteration.
+        if (n == 0)
+        {
+            current_card = current_card->next;
+        }
+        else
+        {
+            current_card = current_card->next;
+            prev_card = prev_card->next;
+        }
+    }
+    card drawnCard = current_card->nodeValue;
+    prev_card->next = current_card->next;
+    delete current_card;
+    return drawnCard;
+}
+
 ostream& operator << (ostream& ostr, const deck& rhs)
 /*
 * overloads the << operator for the deck class
 * Iterates through each node in the linked list
-* and utilizes the overloaded << operator for 
+* and utilizes the overloaded << operator for
 * the card object in the current node's nodeValue.
 * Finishes after printing the last node
 */
 {
-    node<card> *curr;
+    node<card>* curr;
     curr = rhs.front;
-    cout << "\n====================\n";
+    cout << "\n==================================================================\n";
     while (curr != NULL)
-    // loop until end of list
+        // loop until end of list
     {
         // print card values to command line
         cout << curr->nodeValue << endl;
         curr = curr->next;
     }
-    cout << "====================\n";
+    cout << "\n==================================================================\n";
 
     return ostr;
 }
@@ -212,7 +247,7 @@ ostream& operator << (ostream& ostr, const deck& rhs)
 card deck::deal()                                       // Tested
 {
     card newCard(front->nodeValue);
-    node<card> *temp;
+    node<card>* temp;
     temp = front->next;
     delete front;
     front = temp;
@@ -220,8 +255,8 @@ card deck::deal()                                       // Tested
 }
 
 void deck::replace(const card& obj)                     // Tested
-{  
-    node<card> *newCard;
+{
+    node<card>* newCard;
     newCard = new node<card>(obj, NULL);
     if (front == NULL)
     {
@@ -372,28 +407,77 @@ string card::getSuit() const
 //=============================================================================
 void playFlip()
 {
+    //print the welcome message
+    cout << "==================================================================\n";
+    cout << "Welcome to Card Flip!\n";
+    cout << "You will draw from one of 24 cards from a shuffled deck.\n";
+    cout << "If you draw an ace, you get 10 points.\n";
+    cout << "If you draw a king, queen, or jack you get 5 points.\n";
+    cout << "If you draw an 8, 9, or 10, you get 0 points.\n";
+    cout << "If you draw a 7, you lose half your points.\n";
+    cout << "If you draw a 2, 3, 4, 5, or 6, you lose all your points.\n";
+    cout << "Additionally, if you draw a heart you gain a point!\n";
+    cout << "You can end the game any time. Good luck!\n";
+    cout << "==================================================================\n";
+
     // make gameDeck
     deck gameDeck;
-    // empty deck for play prep     STILL NOT SURE IF THE DESTRUCTOR IS FORMATTED CORRECTLY
-    // gameDeck.~deck();                WE NEED AN OVERLOADED CONSTRUCTOR with a bool indicating whether it is empty
+    // empty deck for play prep  
+    gameDeck.~deck();
     // make drawDeck and play prep
     deck drawDeck;
+    //shuffle the initial deck three times
     for (int i = 0; i < 3; i++)
     {
         drawDeck.shuffle();
     }
-    
-        drawDeck.shuffle();
 
     // loop to draw 24 cards into gameDeck
     for (int i = 0; i < 24; i++)
     {
         gameDeck.replace(drawDeck.deal());
     }
-    
+
     // debug printing for grading
+    cout << endl << "Remaining Cards in Original Deck: " << endl << drawDeck;
     cout << endl << "Game Deck: " << endl << gameDeck;
-    cout << endl << "Remaining Cards: " << endl << drawDeck;
+
+    //initialize the keep_playing character
+    char keep_playing = 'y';
+
+    //keep drawing a card until the user wants to stop.
+    while (keep_playing == 'y')
+    {
+        //ask for index of a card
+        cout << "What card would you like to draw? ";
+        int card_index = 0;
+        cin >> card_index;
+        cout << "You chose " << gameDeck.getCardAtI(card_index) << " ";
+
+        //*************************************************************************!
+        //calculate points for the drawn card and store it
+        //*************************************************************************!
+
+        cout << "\n==================================================================\n";
+        cout << endl << "Remaining Cards for Game: " << endl << gameDeck;
+
+        //initialize the user_input character
+        char user_input = 'a';
+
+        //ask if user wants to keep playing
+        while (1 == 1)
+        {
+            cout << "Would you like to draw another card (y) or quit (n)? ";
+            cin >> user_input;
+            if (user_input == 'y' | user_input == 'n')
+            {
+                break;
+            }
+        }
+
+        //assign the user_input character to the keep_playing character
+        keep_playing = user_input;
+    }
 }
 //=============================================================================
 
