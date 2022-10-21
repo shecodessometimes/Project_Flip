@@ -70,13 +70,18 @@ deck::deck()
 } // end of deck constructor
 
 deck::deck(bool a)
+/*
+* Overloaded deck initializer that initializes a deck with no initial cards.
+*/
 {
     front = NULL;
     back = NULL;
 }
 
-// deck destructor
 deck::~deck()
+/*
+* Destructor for the deck object.
+*/
 {
     node<card>* current;
     node<card>* next;
@@ -193,12 +198,18 @@ void deck::shuffle()
 } // End of shuffle
 
 card deck::getCardAtI(int i)
+/*
+* Returns the card object at index i and deletes from deck.
+* i: index of the card to return and delete.
+* returns value of card at i.
+*/
 {
     node<card>* current_card;
     node<card>* prev_card;
     current_card = front;
     prev_card = front;
 
+    //if the index is 0, that is we want to return the first card, assign front to next card.
     if (i == 0)
     {
         card drawnCard = front->nodeValue;
@@ -208,6 +219,7 @@ card deck::getCardAtI(int i)
         return drawnCard;
     }
 
+    //otherwise go through the deck and find the card at i.
     for (int n = 0; n < i; n++)
     {
         //only moves pointer for current_card forward if on the first iteration.
@@ -221,9 +233,13 @@ card deck::getCardAtI(int i)
             prev_card = prev_card->next;
         }
     }
-    card drawnCard = current_card->nodeValue;
-    prev_card->next = current_card->next;
-    delete current_card;
+    
+    //save value of current card then delete
+    card drawnCard = current_card->nodeValue; //save value of card at i to drawnCard
+    prev_card->next = current_card->next; //assign next of prev value to next of card at i
+    delete current_card; //delete card at i
+    
+    //return value of card at i
     return drawnCard;
 }
 
@@ -251,7 +267,10 @@ ostream& operator << (ostream& ostr, const deck& rhs)
     return ostr;
 }
 
-card deck::deal()                                       // Tested
+card deck::deal()
+/*
+* Deals the card at the top of the deck, then deletes it.
+*/
 {
     card newCard(front->nodeValue);
     node<card>* temp;
@@ -261,8 +280,12 @@ card deck::deal()                                       // Tested
     return newCard;
 }
 
-void deck::replace(const card& obj)                     // Tested
+void deck::replace(const card& obj)
 {
+/*
+* Replaces the end of the deck with the given card.
+* obj: The card object to insert at the back of the deck.
+*/
     node<card>* newCard;
     newCard = new node<card>(obj, NULL);
     if (front == NULL)
@@ -358,11 +381,10 @@ void card::setValue(const int& v)
             valid = true;
             value = v;
         }
+        
         // reject value if not within v accept
         else
-        {// Header file deck.h for the Deck object.
-// Deck object implementation
-// Assumption: a deck contains 52 cards after construction
+        {
             cout << "\nInvalid value, please try again";
         }
     }
@@ -386,6 +408,7 @@ void card::setSuit(const string& s)
     // looping condition
     bool valid = false;
     cout << "\nPlease enter a suit (lowercase):";
+    
     // loop until input is valid
     while (!valid)
     {
@@ -395,6 +418,7 @@ void card::setSuit(const string& s)
             valid = true;
             suit = s;
         }
+        
         // reject value if not within s accept
         else
         {
@@ -410,6 +434,7 @@ string card::getSuit() const
 {
     return suit;
 }
+
 #pragma endregion Card
 //=============================================================================
 void playFlip()
@@ -429,8 +454,10 @@ void playFlip()
 
     // make empty gameDeck
     deck gameDeck(true);
+    
     // make drawDeck and play prep
     deck drawDeck;
+    
     //shuffle the initial deck three times
     for (int i = 0; i < 3; i++)
     {
@@ -518,16 +545,4 @@ int main()
 {
     //initialize the deck, shuffle, then draw.
     playFlip();
-    /*
-    deck drawDeck;
-    deck gameDeck;
-    gameDeck.~deck();
-    cout << "Unshuffled Deck: ";
-    cout << gameDeck;
-    drawDeck.shuffle();
-    cout << endl << "Shuffled Deck: " << endl << drawDeck;
-    cout << "This is for debugging";
-    gameDeck.replace(drawDeck.deal());
-    cout << "This is for debugging" << endl << gameDeck;
-    */
 }
