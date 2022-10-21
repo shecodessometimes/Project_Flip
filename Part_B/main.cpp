@@ -1,15 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Project#2
+// Project #2
 // Flip-Card: Part B
 // Written by:
 // James Napier:                                      napier.j@northeastern.edu
 // Julia Rasmussen:                                rasmussen.j@northeastern.edu
 // Samuel Sheehan:                                   sheehan.s@northeastern.edu
 //
-// Main program file for homework 2b. Contains declarations for 
-// deck, shuffle, printDeck, << operator overload for the card object, setValue,
-// getValue, setSuit and getSuit
-//
+// Main program file for Project Flip Part B.
 ///////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 #include <vector>
@@ -31,16 +28,18 @@ deck::deck()
 */
 {
     string suit_list[] = { "club", "diamond", "heart", "spade" };
+    
+    // loop for each suit
     for (int s = 0; s < 4; s++)
-        // loop for each suit
     {
+        // loop for each card in suit
         for (int n = 1; n < 14; n++)
-            // loop for each card in suit
         {
             // create new card pointer
             node<card>* newCard;
+            
+            // checks if it is the first card
             if (s == 0 && n == 1)
-                // checks if first card
             {
                 // create new card, set to front
                 card new_card(suit_list[s], n);
@@ -48,17 +47,20 @@ deck::deck()
                 front = newCard;
                 back = newCard;
             }
+            
+            // if it is not the first card
             else
-                // if not first card
             {
                 // set front
                 node<card>* curr;
                 curr = front;
+                
+                // nagivate to end of current deck
                 while (curr->next != NULL)
-                    // nagivate to end of current deck
                 {
                     curr = curr->next;
                 }
+                
                 // create new card, set current->next to new card
                 card new_card(suit_list[s], n);
                 newCard = new node<card>(new_card, NULL);
@@ -109,10 +111,12 @@ void deck::shuffle()
     node<card>* prev1;
     node<card>* curr2;
     node<card>* prev2;
+    
     // Set curr1 to first card
     curr1 = front;
+    
+    // completes operation for each card except the last
     for (int ind = 0; ind < 50; ind++)
-        // completes operation for each card except the last
     {
         // seed psuedo-random number generator
         srand(time(NULL));
@@ -128,32 +132,38 @@ void deck::shuffle()
                 curr1 = curr1->next;
                 curr2 = curr1;
             }
+            
+            // base case: set 2nd card's current value to front card
+            // 1st card's previous value is unneeded because it is the front
             else
-                // base case: set 2nd card's current value to front card
-                // 1st card's previous value is unneeded because it is the front
             {
                 curr2 = curr1;
             }
+            
             // base case: do not move card if swap_ind = ind
             if (swap_ind != ind)
             {
+                // navigate to 2nd card to be swapped
                 for (int ind2 = ind; ind2 < swap_ind; ind2++)
-                    // navigate to 2nd card to be swapped
                 {
                     prev2 = curr2;
                     curr2 = curr2->next;
                 }
+                
                 // instantiate temporary card pointer to store swapped card
                 node<card>* temp;
+                
+                // base case: 1st card is the front card
                 if (ind == 0)
-                    // base case: 1st card is the front card
                 {
                     front = curr2;
                     prev2->next = curr1;
+                    
                     // use temporary card pointer to store 1st card
                     temp = curr1->next;
                     curr1->next = curr2->next;
                     curr2->next = temp;
+                    
                     // reset 1st card pointer to the 2nd card
                     // (fixes 1st card current pointer back for future)
                     curr1 = curr2;
@@ -162,10 +172,12 @@ void deck::shuffle()
                 {
                     prev1->next = curr2;
                     prev2->next = curr1;
-                    // use temporary card pointer to store 1t card
+                    
+                    // use temporary card pointer to store 1st card
                     temp = curr1->next;
                     curr1->next = curr2->next;
                     curr2->next = temp;
+                    
                     // reset 1st card pointer to the 2nd card
                     // (fixes 1st card current pointer back for future)
                     curr1 = curr2;
@@ -181,8 +193,9 @@ void deck::shuffle()
                 }
             }
         }
+        
+        // card is randomly chosen to stay in it's original position
         else
-            // card is randomly chosen to stay in it's original position
         {
             curr1 = curr1->next;
             if (ind == 49)
